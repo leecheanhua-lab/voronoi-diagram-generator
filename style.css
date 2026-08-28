@@ -1,0 +1,705 @@
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* =========================================
+   PAGE
+========================================= */
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+
+body {
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background: #111318;
+  color: #ffffff;
+
+  padding: 18px;
+}
+
+
+/* =========================================
+   APP LAYOUT
+========================================= */
+
+.app {
+  width: min(1200px, 100%);
+  height: calc(100vh - 36px);
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+header {
+  flex-shrink: 0;
+}
+
+
+header h1 {
+  font-size:
+    clamp(
+      1.4rem,
+      2vw,
+      2rem
+    );
+
+  margin-bottom: 4px;
+}
+
+
+header p {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+
+/* =========================================
+   CONTROLS
+========================================= */
+
+.controls {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 20px;
+
+  background: #1a1d24;
+
+  border:
+    1px solid
+    #2a2f3a;
+
+  border-radius: 10px;
+
+  padding: 12px 16px;
+}
+
+
+/* =========================================
+   POINT SLIDER
+========================================= */
+
+.slider-container {
+  flex: 1;
+  min-width: 200px;
+}
+
+
+.slider-label {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  margin-bottom: 6px;
+
+  font-size: 0.85rem;
+}
+
+
+#pointValue {
+  color: #7dd3fc;
+  font-size: 1rem;
+}
+
+
+input[type="range"] {
+  width: 100%;
+  cursor: pointer;
+}
+
+
+.range-labels {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  margin-top: 4px;
+
+  color: #6b7280;
+  font-size: 0.7rem;
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+
+button {
+  border: none;
+
+  border-radius: 7px;
+
+  padding: 9px 15px;
+
+  font-size: 0.85rem;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s,
+    opacity 0.15s;
+}
+
+
+button:hover {
+  transform:
+    translateY(-1px);
+
+  opacity: 0.9;
+}
+
+
+button:active {
+  transform:
+    translateY(0);
+}
+
+
+button:disabled {
+  opacity: 0.4;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+.primary {
+  background: #7dd3fc;
+  color: #111318;
+}
+
+
+.secondary {
+  background: #2a2f3a;
+  color: #e5e7eb;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status {
+  flex-shrink: 0;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  color: #9ca3af;
+  font-size: 0.82rem;
+
+  padding: 0 4px;
+}
+
+
+#pointStatus {
+  color: #7dd3fc;
+  font-weight: bold;
+}
+
+
+/* =========================================
+   SIMULATION AREA
+========================================= */
+
+.simulation-area {
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+
+  gap: 12px;
+}
+
+
+/* =========================================
+   CANVAS
+========================================= */
+
+.canvas-wrapper {
+  flex: 1;
+
+  min-width: 0;
+  min-height: 0;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #2a2f3a;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+
+canvas {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  background: #ffffff;
+
+  cursor: crosshair;
+}
+
+
+/* =========================================
+   SIDEBARS
+========================================= */
+
+.weight-controls,
+.relax-controls {
+  width: 250px;
+
+  flex-shrink: 0;
+
+  background: #1a1d24;
+
+  border:
+    1px solid
+    #2a2f3a;
+
+  border-radius: 10px;
+
+  padding: 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  overflow-y: auto;
+}
+
+
+.weight-controls.hidden,
+.relax-controls.hidden {
+  display: none;
+}
+
+
+/* =========================================
+   SIDEBAR TITLE
+========================================= */
+
+.sidebar-title {
+  border-bottom:
+    1px solid
+    #2a2f3a;
+
+  padding-bottom: 14px;
+}
+
+
+.sidebar-title h2 {
+  font-size: 1rem;
+
+  margin-bottom: 6px;
+
+  color: #ffffff;
+}
+
+
+.sidebar-title p {
+  color: #9ca3af;
+
+  font-size: 0.78rem;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================
+   CONTROL SECTION
+========================================= */
+
+.control-section {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.control-label {
+  font-size: 0.78rem;
+
+  color: #9ca3af;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.05em;
+}
+
+
+/* =========================================
+   RADIO
+========================================= */
+
+.radio-option {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 0.85rem;
+
+  color: #e5e7eb;
+
+  cursor: pointer;
+}
+
+
+.radio-option input {
+  cursor: pointer;
+}
+
+
+/* =========================================
+   WEIGHT / CONTROL HEADER
+========================================= */
+
+.weight-header {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  font-size: 0.85rem;
+}
+
+
+#weightValue,
+#iterationValue,
+#speedValue {
+  color: #7dd3fc;
+  font-size: 1.05rem;
+}
+
+
+/* =========================================
+   WEIGHT SUMMARY
+========================================= */
+
+.weight-summary {
+  margin-top: auto;
+
+  padding-top: 16px;
+
+  border-top:
+    1px solid
+    #2a2f3a;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  font-size: 0.78rem;
+
+  color: #9ca3af;
+}
+
+
+#totalWeightValue {
+  color: #7dd3fc;
+  font-size: 1rem;
+}
+
+
+/* =========================================
+   RELAX PROGRESS
+========================================= */
+
+.relax-progress {
+  background: #151920;
+
+  border:
+    1px solid
+    #2a3440;
+
+  border-radius: 8px;
+
+  padding: 12px;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  color: #9ca3af;
+
+  font-size: 0.8rem;
+}
+
+
+#iterationStatus {
+  color: #7dd3fc;
+}
+
+
+/* =========================================
+   RELAX BUTTONS
+========================================= */
+
+.relax-buttons {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+/* =========================================
+   MODE NAVIGATION
+========================================= */
+
+.mode-bar {
+  flex-shrink: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 6px;
+
+  padding: 6px;
+
+  background: #1a1d24;
+
+  border:
+    1px solid
+    #2a2f3a;
+
+  border-radius: 10px;
+}
+
+
+.mode-button {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 3px;
+
+  min-height: 52px;
+
+  padding: 8px;
+
+  background: transparent;
+
+  color: #9ca3af;
+
+  border:
+    1px solid
+    transparent;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+}
+
+
+.mode-button:hover:not(:disabled) {
+  background: #252a34;
+
+  opacity: 1;
+
+  transform: none;
+}
+
+
+.mode-button.active {
+  background: #2a2f3a;
+
+  border-color: #3b4657;
+
+  color: #7dd3fc;
+}
+
+
+.mode-button:active {
+  transform: none;
+}
+
+
+.mode-title {
+  font-size: 0.82rem;
+  font-weight: bold;
+}
+
+
+.mode-description {
+  font-size: 0.65rem;
+
+  color: #6b7280;
+
+  text-align: center;
+}
+
+
+.mode-button.active
+.mode-description {
+  color: #9ca3af;
+}
+
+
+/* =========================================
+   MODE-SPECIFIC UI
+========================================= */
+
+.app.basic-mode #weightControls,
+.app.basic-mode #relaxControls {
+  display: none;
+}
+
+
+.app.dynamic-mode #weightControls,
+.app.dynamic-mode #relaxControls {
+  display: none;
+}
+
+
+.app.weighted-mode #generateBtn {
+  display: none;
+}
+
+
+.app.weighted-mode #relaxControls {
+  display: none;
+}
+
+
+.app.relax-mode #generateBtn {
+  display: none;
+}
+
+
+.app.relax-mode #weightControls {
+  display: none;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+  .simulation-area {
+    flex-direction: column;
+  }
+
+
+  .weight-controls,
+  .relax-controls {
+    width: 100%;
+
+    min-height: 210px;
+
+    max-height: 280px;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  body {
+    padding: 10px;
+  }
+
+
+  .app {
+    height:
+      calc(100vh - 20px);
+
+    gap: 8px;
+  }
+
+
+  header p {
+    display: none;
+  }
+
+
+  .controls {
+    gap: 10px;
+    padding: 10px;
+  }
+
+
+  .button-group {
+    gap: 5px;
+  }
+
+
+  button {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+  }
+
+
+  .mode-description {
+    display: none;
+  }
+
+}

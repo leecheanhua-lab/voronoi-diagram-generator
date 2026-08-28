@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Interactive Voronoi Generator</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+
+</head>
+
+
+<body>
+
+  <div class="app basic-mode">
+
+
+    <!-- =====================================
+         HEADER
+    ====================================== -->
+
+    <header>
+
+      <div>
+
+        <h1>
+          Interactive Voronoi Generator
+        </h1>
+
+        <p>
+          Explore how points divide space based on
+          distance, movement, influence, and relaxation.
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================
+         MAIN CONTROLS
+    ====================================== -->
+
+    <section class="controls">
+
+
+      <div class="slider-container">
+
+        <div class="slider-label">
+
+          <span>
+            Number of Points
+          </span>
+
+          <strong id="pointValue">
+            10
+          </strong>
+
+        </div>
+
+
+        <input
+          type="range"
+          id="pointSlider"
+          min="1"
+          max="30"
+          value="10"
+        />
+
+
+        <div class="range-labels">
+
+          <span>
+            1
+          </span>
+
+          <span>
+            30
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="button-group">
+
+
+        <button
+          id="undoBtn"
+          class="secondary"
+        >
+          Undo
+        </button>
+
+
+        <button
+          id="clearBtn"
+          class="secondary"
+        >
+          Clear
+        </button>
+
+
+        <button
+          id="randomBtn"
+          class="secondary"
+        >
+          Random
+        </button>
+
+
+        <button
+          id="generateBtn"
+          class="primary"
+        >
+          Generate
+        </button>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================
+         STATUS
+    ====================================== -->
+
+    <section class="status">
+
+      <span id="pointStatus">
+        Placed: 0 / 10
+      </span>
+
+
+      <span id="message">
+        Click on the canvas to place points.
+      </span>
+
+    </section>
+
+
+    <!-- =====================================
+         SIMULATION AREA
+    ====================================== -->
+
+    <main class="simulation-area">
+
+
+      <!-- CANVAS -->
+
+      <div class="canvas-wrapper">
+
+        <canvas id="voronoiCanvas">
+
+          Your browser does not support HTML Canvas.
+
+        </canvas>
+
+      </div>
+
+
+      <!-- ===================================
+           WEIGHTED SIDEBAR
+      ==================================== -->
+
+      <aside
+        id="weightControls"
+        class="weight-controls hidden"
+      >
+
+
+        <div class="sidebar-title">
+
+          <h2>
+            Seed Controls
+          </h2>
+
+          <p>
+            Select a seed to adjust its influence.
+          </p>
+
+        </div>
+
+
+        <!-- Weighting method -->
+
+        <div
+          class="control-section"
+        >
+
+          <span class="control-label">
+            Weighting Rule
+          </span>
+
+
+          <label class="radio-option">
+
+            <input
+              type="radio"
+              name="weightMode"
+              value="additive"
+              checked
+            />
+
+            <span>
+              Additive
+            </span>
+
+          </label>
+
+
+          <label class="radio-option">
+
+            <input
+              type="radio"
+              name="weightMode"
+              value="multiplicative"
+            />
+
+            <span>
+              Multiplicative
+            </span>
+
+          </label>
+
+        </div>
+
+
+        <!-- Selected seed -->
+
+        <div class="control-section">
+
+
+          <div class="weight-header">
+
+            <span id="selectedPointLabel">
+              Click a seed point
+            </span>
+
+
+            <strong id="weightValue">
+              -
+            </strong>
+
+          </div>
+
+
+          <input
+            type="range"
+            id="weightSlider"
+            min="0"
+            max="10"
+            value="5"
+            step="0.1"
+            disabled
+          />
+
+
+          <div class="range-labels">
+
+            <span>
+              Less influence
+            </span>
+
+            <span>
+              More influence
+            </span>
+
+          </div>
+
+
+        </div>
+
+
+        <!-- Weight summary -->
+
+        <div
+          class="weight-summary"
+        >
+
+          <span>
+            Total Influence
+          </span>
+
+
+          <strong id="totalWeightValue">
+            0.0
+          </strong>
+
+        </div>
+
+
+      </aside>
+
+
+      <!-- ===================================
+           RELAX SIDEBAR
+      ==================================== -->
+
+      <aside
+        id="relaxControls"
+        class="relax-controls hidden"
+      >
+
+
+        <div class="sidebar-title">
+
+          <h2>
+            Lloyd Relaxation
+          </h2>
+
+          <p>
+            Move each seed toward the centroid
+            of its Voronoi cell.
+          </p>
+
+        </div>
+
+
+        <!-- ITERATIONS -->
+
+        <div class="control-section">
+
+          <div class="weight-header">
+
+            <span>
+              Iterations
+            </span>
+
+            <strong
+              id="iterationValue"
+            >
+              20
+            </strong>
+
+          </div>
+
+
+          <input
+            type="range"
+            id="iterationSlider"
+            min="1"
+            max="100"
+            value="20"
+            step="1"
+          />
+
+
+          <div class="range-labels">
+
+            <span>
+              1
+            </span>
+
+            <span>
+              100
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- SPEED -->
+
+        <div class="control-section">
+
+          <div class="weight-header">
+
+            <span>
+              Animation Speed
+            </span>
+
+            <strong
+              id="speedValue"
+            >
+              Medium
+            </strong>
+
+          </div>
+
+
+          <input
+            type="range"
+            id="speedSlider"
+            min="1"
+            max="100"
+            value="50"
+            step="1"
+          />
+
+
+          <div class="range-labels">
+
+            <span>
+              Slow
+            </span>
+
+            <span>
+              Fast
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+
+        <div class="relax-progress">
+
+          <span>
+            Progress
+          </span>
+
+          <strong
+            id="iterationStatus"
+          >
+            0 / 20
+          </strong>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="relax-buttons">
+
+          <button
+            id="relaxBtn"
+            class="primary"
+          >
+            Start Relaxation
+          </button>
+
+
+          <button
+            id="resetRelaxBtn"
+            class="secondary"
+          >
+            Reset Seeds
+          </button>
+
+        </div>
+
+
+      </aside>
+
+
+    </main>
+
+
+    <!-- =====================================
+         MODE NAVIGATION
+    ====================================== -->
+
+    <footer class="mode-bar">
+
+
+      <!-- BASIC -->
+
+      <button
+        class="mode-button active"
+        data-mode="basic"
+      >
+
+        <span class="mode-title">
+          Basic
+        </span>
+
+        <span class="mode-description">
+          What is it?
+        </span>
+
+      </button>
+
+
+      <!-- DYNAMIC -->
+
+      <button
+        class="mode-button"
+        data-mode="dynamic"
+      >
+
+        <span class="mode-title">
+          Dynamic
+        </span>
+
+        <span class="mode-description">
+          How does it react?
+        </span>
+
+      </button>
+
+
+      <!-- WEIGHTED -->
+
+      <button
+        class="mode-button"
+        data-mode="weighted"
+      >
+
+        <span class="mode-title">
+          Weighted
+        </span>
+
+        <span class="mode-description">
+          Change the rules
+        </span>
+
+      </button>
+
+
+      <!-- RELAX -->
+
+      <button
+        class="mode-button"
+        data-mode="relax"
+      >
+
+        <span class="mode-title">
+          Relax
+        </span>
+
+        <span class="mode-description">
+          Lloyd relaxation
+        </span>
+
+      </button>
+
+
+    </footer>
+
+
+  </div>
+
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
